@@ -74,7 +74,7 @@ describe('ClaimsProcessor', () => {
     expect(result.approved).toBe(true);
   });
 
-  // Fifth Rule Check
+  // Fifth Rule Check: Zero Payout
   test('should return zero payout if amount claimed is less than deductible', () => {
     const claim: Claim = {
       policyId: 'POL123',
@@ -88,5 +88,21 @@ describe('ClaimsProcessor', () => {
     expect(result.approved).toBe(false);
     expect(result.payout).toBe(0);
     expect(result.reasonCode).toBe(REASON_CODES.ZERO_PAYOUT);
+  });
+
+  // Sixth Rule Check: Coverage Limit
+  test('should limit payout to coverage limit', () => {
+    const claim: Claim = {
+      policyId: 'POL123',
+      incidentType: 'fire',
+      incidentDate: new Date('2023-06-15'),
+      amountClaimed: 15000,
+      // Exceeds 10000 coverage limit after deductible
+    };
+
+    const result = processor.processClaim(claim);
+    expect(result.payout).toBe(10000);
+    // Policy has reached coverage limit
+    expect(result.approved).toBe(true);
   });
 });
