@@ -78,6 +78,15 @@ export class ClaimsProcessor {
     // Calculate payout, assuming claim has bypassed other checks
     const payout = claim.amountClaimed - policy.deductible;
 
+    // Return a zero payout code if the amountClaimed < deductible
+    if (payout <= 0) {
+      return {
+        approved: false,
+        payout: 0,
+        reasonCode: REASON_CODES.ZERO_PAYOUT,
+      };
+    }
+
     return {
       approved: true,
       payout,
