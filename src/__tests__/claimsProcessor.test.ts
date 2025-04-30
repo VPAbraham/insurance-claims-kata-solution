@@ -6,7 +6,7 @@ describe('ClaimsProcessor', () => {
   let processor: ClaimsProcessor;
 
   beforeEach(() => {
-    // instantiate new ClaimsProcessor and pass in test policies
+    // Instantiate new ClaimsProcessor and pass in test policies
     processor = new ClaimsProcessor(testPolicies);
   });
 

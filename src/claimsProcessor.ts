@@ -1,7 +1,6 @@
-// Define the interfaces and basic stuctures I have been given for the task
+// Defines the interfaces and basic stuctures I have been given for the task
 
 // Types:
-
 export type IncidentType = 'accident' | 'theft' | 'fire' | 'water damage';
 
 export interface Policy {
