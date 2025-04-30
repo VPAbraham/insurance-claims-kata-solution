@@ -30,5 +30,3 @@ export interface ClaimResult {
   payout: number;
   reasonCode: string;
 }
-
-// todo: Claims processor class that will take in a Policy and Claim and evaluate them against each other.
