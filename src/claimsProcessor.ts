@@ -66,6 +66,14 @@ export class ClaimsProcessor {
         reasonCode: REASON_CODES.POLICY_INACTIVE,
       };
     }
+    // Check if incident type is covered
+    if (!this.isIncidentCovered(policy, claim.incidentType)) {
+      return {
+        approved: false,
+        payout: 0,
+        reasonCode: REASON_CODES.NOT_COVERED,
+      };
+    }
 
     return {
       approved: true,
@@ -82,5 +90,10 @@ export class ClaimsProcessor {
   // Method for checking whether or not policy is currently active
   isPolicyActive(policy: Policy, incidentDate: Date): boolean {
     return incidentDate >= policy.startDate && incidentDate <= policy.endDate;
+  }
+
+  // Method for checking if incident is covered
+  isIncidentCovered(policy: Policy, incidentType: IncidentType): boolean {
+    return policy.coveredIncidents.includes(incidentType);
   }
 }
