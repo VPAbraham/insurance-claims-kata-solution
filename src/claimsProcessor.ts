@@ -38,3 +38,19 @@ export const REASON_CODES = {
   NOT_COVERED: 'NOT_COVERED',
   ZERO_PAYOUT: 'ZERO_PAYOUT',
 };
+
+export class ClaimsProcessor {
+  policies: Policy[];
+
+  constructor(policies: Policy[]) {
+    this.policies = policies;
+  }
+
+  processClaim(claim: Claim): ClaimResult {
+    return {
+      approved: true,
+      payout: 0,
+      reasonCode: REASON_CODES.APPROVED,
+    };
+  }
+}
