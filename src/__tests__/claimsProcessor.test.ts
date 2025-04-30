@@ -1,4 +1,4 @@
-import { ClaimsProcessor, Claim } from '../claimsProcessor';
+import { ClaimsProcessor, Claim, REASON_CODES } from '../claimsProcessor';
 import { testPolicies } from '../testData';
 
 describe('ClaimsProcessor', () => {
@@ -10,8 +10,22 @@ describe('ClaimsProcessor', () => {
     processor = new ClaimsProcessor(testPolicies);
   });
 
-  // add test blocks
   test('should create a claims processor with policies', () => {
     expect(processor).toBeInstanceOf(ClaimsProcessor);
+  });
+
+  // First feature test: NON_EXISTENT policy
+  test('should handle non-existent policy', () => {
+    const claim: Claim = {
+      policyId: 'non_existent_id',
+      incidentType: 'fire',
+      incidentDate: new Date('2023-08-17'),
+      amountClaimed: 3000,
+    };
+
+    const result = processor.processClaim(claim);
+    expect(result.approved).toBe(false);
+    expect(result.payout).toBe(0);
+    expect(result.reasonCode).toBe('POLICY_NOT_FOUND');
   });
 });
