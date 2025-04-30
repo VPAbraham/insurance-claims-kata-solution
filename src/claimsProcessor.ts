@@ -75,9 +75,12 @@ export class ClaimsProcessor {
       };
     }
 
+    // Calculate payout, assuming claim has bypassed other checks
+    const payout = claim.amountClaimed - policy.deductible;
+
     return {
       approved: true,
-      payout: 0,
+      payout,
       reasonCode: REASON_CODES.APPROVED,
     };
   }
