@@ -47,10 +47,27 @@ export class ClaimsProcessor {
   }
 
   processClaim(claim: Claim): ClaimResult {
+    // Find matching policy if it exists
+    const policy = this.findPolicy(claim.policyId);
+
+    // If policy not found, return a rejection object
+    if (!policy) {
+      return {
+        approved: false,
+        payout: 0,
+        reasonCode: 'POLICY_NOT_FOUND',
+      };
+    }
+
     return {
       approved: true,
       payout: 0,
       reasonCode: REASON_CODES.APPROVED,
     };
+  }
+
+  // Method for finding policy
+  findPolicy(policyId: string): Policy | undefined {
+    return this.policies.find((policy) => policy.policyId === policyId);
   }
 }
