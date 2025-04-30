@@ -105,4 +105,22 @@ describe('ClaimsProcessor', () => {
     // Policy has reached coverage limit
     expect(result.approved).toBe(true);
   });
+
+  // Happy Path: Valid Claim
+  test('should correctly process a valid claim', () => {
+    const claim: Claim = {
+      policyId: 'POL456',
+      incidentType: 'water damage',
+      // Covered in POL456
+      incidentDate: new Date('2023-06-15'),
+      // During policy period
+      amountClaimed: 5000,
+      // Results in payout of 4750
+    };
+
+    const result = processor.processClaim(claim);
+    expect(result.approved).toBe(true);
+    expect(result.payout).toBe(4750);
+    expect(result.reasonCode).toBe(REASON_CODES.APPROVED);
+  });
 });
