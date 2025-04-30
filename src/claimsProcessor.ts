@@ -30,3 +30,11 @@ export interface ClaimResult {
   payout: number;
   reasonCode: string;
 }
+
+// Reason codes, in screaming snake case, to differentiate from variable names
+export const REASON_CODES = {
+  APPROVED: 'APPROVED',
+  POLICY_INACTIVE: 'POLICY_INACTIVE',
+  NOT_COVERED: 'NOT_COVERED',
+  ZERO_PAYOUT: 'ZERO_PAYOUT',
+};
