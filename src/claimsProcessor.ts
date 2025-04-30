@@ -58,6 +58,14 @@ export class ClaimsProcessor {
         reasonCode: 'POLICY_NOT_FOUND',
       };
     }
+    // Check if policy active on incident date
+    if (!this.isPolicyActive(policy, claim.incidentDate)) {
+      return {
+        approved: false,
+        payout: 0,
+        reasonCode: REASON_CODES.POLICY_INACTIVE,
+      };
+    }
 
     return {
       approved: true,
@@ -69,5 +77,10 @@ export class ClaimsProcessor {
   // Method for finding policy
   findPolicy(policyId: string): Policy | undefined {
     return this.policies.find((policy) => policy.policyId === policyId);
+  }
+
+  // Method for checking whether or not policy is currently active
+  isPolicyActive(policy: Policy, incidentDate: Date): boolean {
+    return incidentDate >= policy.startDate && incidentDate <= policy.endDate;
   }
 }
