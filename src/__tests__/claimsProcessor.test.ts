@@ -14,7 +14,7 @@ describe('ClaimsProcessor', () => {
     expect(processor).toBeInstanceOf(ClaimsProcessor);
   });
 
-  // First feature test: NON_EXISTENT policy
+  // First Rule Check: NON_EXISTENT policy
   test('should handle non-existent policy', () => {
     const claim: Claim = {
       policyId: 'non_existent_id',
@@ -29,7 +29,7 @@ describe('ClaimsProcessor', () => {
     expect(result.reasonCode).toBe('POLICY_NOT_FOUND');
   });
 
-  // Second feature test: INACTIVE policy
+  // Second Rule Check: INACTIVE policy
   test('should reject claim if incident date is outside policy period', () => {
     const claim: Claim = {
       policyId: 'POL123',
@@ -44,7 +44,7 @@ describe('ClaimsProcessor', () => {
     expect(result.reasonCode).toBe(REASON_CODES.POLICY_INACTIVE);
   });
 
-  // Third feature: Incident type NOT_COVERED
+  // Third Rule Check: Incident type NOT_COVERED
   test('should reject claim if incident type is not covered', () => {
     const claim: Claim = {
       policyId: 'POL123',
@@ -59,7 +59,7 @@ describe('ClaimsProcessor', () => {
     expect(result.reasonCode).toBe(REASON_CODES.NOT_COVERED);
   });
 
-  // Fourth feature: Payout Calculation
+  // Fourth Rule Check: Payout Calculation
   test('should calculate payout as amount claimed minus deductible', () => {
     const claim: Claim = {
       policyId: 'POL123',
@@ -72,5 +72,21 @@ describe('ClaimsProcessor', () => {
     // 3000(claim) - 500(policy) deductible
     expect(result.payout).toBe(2500);
     expect(result.approved).toBe(true);
+  });
+
+  // Fifth Rule Check
+  test('should return zero payout if amount claimed is less than deductible', () => {
+    const claim: Claim = {
+      policyId: 'POL123',
+      incidentType: 'fire',
+      incidentDate: new Date('2023-06-15'),
+      // Less than 500 deductible
+      amountClaimed: 400,
+    };
+
+    const result = processor.processClaim(claim);
+    expect(result.approved).toBe(false);
+    expect(result.payout).toBe(0);
+    expect(result.reasonCode).toBe(REASON_CODES.ZERO_PAYOUT);
   });
 });
