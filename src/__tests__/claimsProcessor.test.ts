@@ -28,4 +28,19 @@ describe('ClaimsProcessor', () => {
     expect(result.payout).toBe(0);
     expect(result.reasonCode).toBe('POLICY_NOT_FOUND');
   });
+
+  // Second feature test: INACTIVE policy
+  test('should reject claim if incident date is outside policy period', () => {
+    const claim: Claim = {
+      policyId: 'POL123',
+      incidentType: 'fire',
+      incidentDate: new Date('2022-12-15'), // Before start date
+      amountClaimed: 3000,
+    };
+
+    const result = processor.processClaim(claim);
+    expect(result.approved).toBe(false);
+    expect(result.payout).toBe(0);
+    expect(result.reasonCode).toBe(REASON_CODES.POLICY_INACTIVE);
+  });
 });
