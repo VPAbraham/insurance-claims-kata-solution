@@ -58,4 +58,19 @@ describe('ClaimsProcessor', () => {
     expect(result.payout).toBe(0);
     expect(result.reasonCode).toBe(REASON_CODES.NOT_COVERED);
   });
+
+  // Fourth feature: Payout Calculation
+  test('should calculate payout as amount claimed minus deductible', () => {
+    const claim: Claim = {
+      policyId: 'POL123',
+      incidentType: 'fire',
+      incidentDate: new Date('2023-06-15'),
+      amountClaimed: 3000,
+    };
+
+    const result = processor.processClaim(claim);
+    // 3000(claim) - 500(policy) deductible
+    expect(result.payout).toBe(2500);
+    expect(result.approved).toBe(true);
+  });
 });
